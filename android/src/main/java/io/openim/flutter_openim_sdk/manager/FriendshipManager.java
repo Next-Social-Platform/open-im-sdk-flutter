@@ -7,6 +7,10 @@ import io.openim.flutter_openim_sdk.listener.OnFriendshipListener;
 import open_im_sdk.Open_im_sdk;
 
 public class FriendshipManager extends BaseManager {
+    // core-sdk 3.8.3+ takes a paging request for the application lists; the Dart
+    // API has no such parameter yet, so always ask for the first page of every status.
+    private static final String APPLICATION_LIST_REQ = "{\"handleResults\":[],\"offset\":0,\"count\":100}";
+
 
 
     public void setFriendListener(MethodCall methodCall, MethodChannel.Result result) {
@@ -35,14 +39,16 @@ public class FriendshipManager extends BaseManager {
     public void getFriendApplicationListAsRecipient(MethodCall methodCall, MethodChannel.Result result) {
         Open_im_sdk.getFriendApplicationListAsRecipient(
                 new OnBaseListener(result, methodCall),
-                value(methodCall, "operationID")
+                value(methodCall, "operationID"),
+                APPLICATION_LIST_REQ
         );
     }
 
     public void getFriendApplicationListAsApplicant(MethodCall methodCall, MethodChannel.Result result) {
         Open_im_sdk.getFriendApplicationListAsApplicant(
                 new OnBaseListener(result, methodCall),
-                value(methodCall, "operationID")
+                value(methodCall, "operationID"),
+                APPLICATION_LIST_REQ
         );
     }
 

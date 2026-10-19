@@ -50,6 +50,9 @@ class MessageType {
 
   static const customMsgOnlineOnly = 120;
 
+  /// Reaction to another message (status 1 = active, 0 = removed)
+  static const reactionMessage = 121;
+
   /// Notification Types
   static const notificationBegin = 1000;
 

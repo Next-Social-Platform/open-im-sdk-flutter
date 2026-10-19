@@ -14,17 +14,16 @@ public class OnUserListener implements open_im_sdk_callback.OnUserListener {
         CommonUtil.emitEvent("userListener", "onUserStatusChanged", s);
     }
 
-    @Override
+    // Our own core-sdk build (android/libs) has no user-command callbacks; keep these
+    // without @Override so the plugin compiles against both it and the published AAR.
     public void onUserCommandAdd(String s) {
         CommonUtil.emitEvent("userListener", "onUserCommandAdd", s);
     }
 
-    @Override
     public void onUserCommandDelete(String s) {
         CommonUtil.emitEvent("userListener", "onUserCommandDelete", s);
     }
 
-    @Override
     public void onUserCommandUpdate(String s) {
         CommonUtil.emitEvent("userListener", "onUserCommandUpdate", s);
     }

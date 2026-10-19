@@ -118,6 +118,15 @@ public class MessageManager extends BaseManager {
                         value(methodCall, "text")));
     }
 
+    public void createReactionMessage(MethodCall methodCall, MethodChannel.Result result) {
+        CommonUtil.runMainThreadReturn(result,
+                Open_im_sdk.createReactionMessage(
+                        value(methodCall, "operationID"),
+                        value(methodCall, "clientMsgID"),
+                        value(methodCall, "reaction"),
+                        value(methodCall, "status")));
+    }
+
     public void createTextAtMessage(MethodCall methodCall, MethodChannel.Result result) {
         CommonUtil.runMainThreadReturn(result,
                 Open_im_sdk.createTextAtMessage(

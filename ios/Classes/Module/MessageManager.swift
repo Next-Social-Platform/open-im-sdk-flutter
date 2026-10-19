@@ -19,6 +19,7 @@ public class MessageManager: BaseServiceManager {
         self["typingStatusUpdate"] = typingStatusUpdate
         self["createTextMessage"] = createTextMessage
         self["createTextAtMessage"] = createTextAtMessage
+        self["createReactionMessage"] = createReactionMessage
         self["createImageMessage"] = createImageMessage
         self["createImageMessageFromFullPath"] = createImageMessageFromFullPath
         self["createSoundMessage"] = createSoundMessage
@@ -110,6 +111,10 @@ public class MessageManager: BaseServiceManager {
         callBack(result, Open_im_sdkCreateTextMessage(methodCall[string: "operationID"], methodCall[string: "text"]))
     }
     
+    func createReactionMessage(methodCall: FlutterMethodCall, result: @escaping FlutterResult){
+        callBack(result, Open_im_sdkCreateReactionMessage(methodCall[string: "operationID"], methodCall[string: "clientMsgID"], methodCall[string: "reaction"], methodCall[int32: "status"]))
+    }
+
     func createTextAtMessage(methodCall: FlutterMethodCall, result: @escaping FlutterResult){
         callBack(result, Open_im_sdkCreateTextAtMessage(methodCall[string: "operationID"], methodCall[string: "text"],
                                                         methodCall[jsonString: "atUserIDList"], methodCall[jsonString: "atUserInfoList"], methodCall[jsonString: "quoteMessage"]))

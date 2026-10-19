@@ -170,6 +170,27 @@ class MessageManager {
               }))
           .then((value) => Utils.toObj(value, (map) => Message.fromJson(map)));
 
+  /// Create a reaction message
+  /// [clientMsgID] clientMsgID of the message being reacted to
+  /// [reaction] Reaction type, e.g. an emoji key
+  /// [status] 1 = add reaction, 0 = remove reaction
+  Future<Message> createReactionMessage({
+    required String clientMsgID,
+    required String reaction,
+    required int status,
+    String? operationID,
+  }) =>
+      _channel
+          .invokeMethod(
+              'createReactionMessage',
+              _buildParam({
+                'clientMsgID': clientMsgID,
+                'reaction': reaction,
+                'status': status,
+                "operationID": Utils.checkOperationID(operationID),
+              }))
+          .then((value) => Utils.toObj(value, (map) => Message.fromJson(map)));
+
   /// Create an @ message
   /// [text] Input content
   /// [atUserIDList] Collection of userIDs being mentioned

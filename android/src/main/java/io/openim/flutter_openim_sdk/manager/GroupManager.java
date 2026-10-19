@@ -7,6 +7,10 @@ import io.openim.flutter_openim_sdk.listener.OnGroupListener;
 import open_im_sdk.Open_im_sdk;
 
 public class GroupManager extends BaseManager {
+    // core-sdk 3.8.3+ takes a paging request for the application lists; the Dart
+    // API has no such parameter yet, so always ask for the first page of every status.
+    private static final String APPLICATION_LIST_REQ = "{\"handleResults\":[],\"offset\":0,\"count\":100}";
+
 
     public void setGroupListener(MethodCall methodCall, MethodChannel.Result result) {
         Open_im_sdk.setGroupListener(new OnGroupListener());
@@ -126,14 +130,16 @@ public class GroupManager extends BaseManager {
     public void getGroupApplicationListAsRecipient(MethodCall methodCall, MethodChannel.Result result) {
         Open_im_sdk.getGroupApplicationListAsRecipient(
                 new OnBaseListener(result, methodCall),
-                value(methodCall, "operationID")
+                value(methodCall, "operationID"),
+                APPLICATION_LIST_REQ
         );
     }
 
     public void getGroupApplicationListAsApplicant(MethodCall methodCall, MethodChannel.Result result) {
         Open_im_sdk.getGroupApplicationListAsApplicant(
                 new OnBaseListener(result, methodCall),
-                value(methodCall, "operationID")
+                value(methodCall, "operationID"),
+                APPLICATION_LIST_REQ
         );
     }
 

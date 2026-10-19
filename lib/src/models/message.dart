@@ -9,6 +9,9 @@ class Message {
   /// Server-generated ID.
   String? serverMsgID;
 
+  /// For reaction messages: clientMsgID of the message being reacted to.
+  String? parentMsgID;
+
   /// Creation time.
   int? createTime;
 
@@ -123,9 +126,16 @@ class Message {
   ///
   TypingElem? typingElem;
 
+  /// Latest reaction of each user to this message (filled in history lists).
+  List<MessageReaction>? reactions;
+
+  /// Reaction content, set when [contentType] is [MessageType.reactionMessage].
+  ReactionElem? reactionElem;
+
   Message({
     this.clientMsgID,
     this.serverMsgID,
+    this.parentMsgID,
     this.createTime,
     this.sendTime,
     this.sessionType,
@@ -164,11 +174,14 @@ class Message {
     this.cardElem,
     this.advancedTextElem,
     this.typingElem,
+    this.reactions,
+    this.reactionElem,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
     clientMsgID = json['clientMsgID'];
     serverMsgID = json['serverMsgID'];
+    parentMsgID = json['parentMsgID'];
     createTime = json['createTime'];
     sendTime = json['sendTime'];
     sendID = json['sendID'];
@@ -208,6 +221,8 @@ class Message {
     cardElem = json['cardElem'] != null ? CardElem.fromJson(json['cardElem']) : null;
     advancedTextElem = json['advancedTextElem'] != null ? AdvancedTextElem.fromJson(json['advancedTextElem']) : null;
     typingElem = json['typingElem'] != null ? TypingElem.fromJson(json['typingElem']) : null;
+    reactions = json['reactions'] != null ? MessageReaction.fromJsonList(json['reactions']) : [];
+    reactionElem = json['reactionElem'] != null ? ReactionElem.fromJson(json['reactionElem']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -252,6 +267,9 @@ class Message {
     data['cardElem'] = this.cardElem?.toJson();
     data['advancedTextElem'] = this.advancedTextElem?.toJson();
     data['typingElem'] = this.typingElem?.toJson();
+    data['parentMsgID'] = this.parentMsgID;
+    data['reactions'] = this.reactions?.map((e) => e.toJson()).toList();
+    data['reactionElem'] = this.reactionElem?.toJson();
     return data;
   }
 
@@ -301,6 +319,9 @@ class Message {
     cardElem = message.cardElem;
     advancedTextElem = message.advancedTextElem;
     typingElem = message.typingElem;
+    parentMsgID = message.parentMsgID;
+    reactions = message.reactions;
+    reactionElem = message.reactionElem;
   }
 
   /// Single chat message
@@ -1199,6 +1220,70 @@ class UserExInfo {
     final data = Map<String, dynamic>();
     data['userID'] = this.userID;
     data['ex'] = this.ex;
+    return data;
+  }
+}
+
+/// A user's reaction to a message.
+class MessageReaction {
+  /// 1 = active, 0 = removed.
+  int? status;
+
+  /// Reaction type, e.g. an emoji key.
+  String? type;
+
+  /// The user who reacted.
+  CardElem? user;
+
+  /// When the reaction was sent.
+  int? sendTime;
+
+  MessageReaction({this.status, this.type, this.user, this.sendTime});
+
+  MessageReaction.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    type = json['type'];
+    user = json['user'] != null ? CardElem.fromJson(json['user']) : null;
+    sendTime = json['sendTime'];
+  }
+
+  static List<MessageReaction> fromJsonList(List<dynamic> values) =>
+      values.map((e) => MessageReaction.fromJson(Map<String, dynamic>.from(e))).toList();
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['status'] = this.status;
+    data['type'] = this.type;
+    data['user'] = this.user?.toJson();
+    data['sendTime'] = this.sendTime;
+    return data;
+  }
+}
+
+/// Content of a reaction message.
+class ReactionElem {
+  /// 1 = active, 0 = removed.
+  int? status;
+
+  /// Reaction type, e.g. an emoji key.
+  String? type;
+
+  /// clientMsgID of the message being reacted to.
+  String? clientMsgID;
+
+  ReactionElem({this.status, this.type, this.clientMsgID});
+
+  ReactionElem.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    type = json['type'];
+    clientMsgID = json['clientMsgID'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = Map<String, dynamic>();
+    data['status'] = this.status;
+    data['type'] = this.type;
+    data['clientMsgID'] = this.clientMsgID;
     return data;
   }
 }
